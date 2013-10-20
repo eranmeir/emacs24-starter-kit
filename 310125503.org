@@ -1,0 +1,148 @@
+#+TITLE: Personal settings (A la starer kit)
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* Activating more of the starter kit
+#+begin_src emacs-lisp
+(starter-kit-load "misc-recommended")
+(starter-kit-load "python")
+(starter-kit-load "org")
+#+end_src
+
+* Eye-candy
+** Theme
+nzenburn theme because the selection background is moar readable than
+vanilla zenburn
+#+begin_src emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+(setq custom-safe-themes t)
+(load-theme 'nzenburn t)
+#+end_src
+** Nicer fonts
+#+begin_src emacs-lisp
+(if (string-match "apple-darwin" system-configuration)
+    (set-face-font 'default "Monaco-13")
+  (set-face-font 'default "Consolas-11"))
+
+#+end_src
+** Line numbers
+#+begin_src emacs-lisp
+(line-number-mode 1)			; have line numbers and
+(column-number-mode 1)			; column numbers in the mode line
+
+(tool-bar-mode -1)			; no tool bar with icons
+(scroll-bar-mode -1)			; no scroll bars
+(unless (string-match "apple-darwin" system-configuration)
+  ;; on mac, there's always a menu bar drown, don't have it empty
+  (menu-bar-mode -1))
+
+(global-hl-line-mode)			; highlight current line
+(global-linum-mode 1)			; add line numbers on the left
+#+end_src
+
+* Windowing fu
+** Rotating windows in a frame 
+(from [[https://github.com/kjhealy/emacs-starter-kit/blob/master/starter-kit-bindings.org]])
+#+begin_src emacs-lisp
+ (defun rotate-windows ()
+   "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+(t
+ (setq i 1)
+ (setq numWindows (count-windows))
+ (while  (< i numWindows)
+   (let* (
+          (w1 (elt (window-list) i))
+          (w2 (elt (window-list) (+ (% i numWindows) 1)))
+          (b1 (window-buffer w1))
+          (b2 (window-buffer w2))
+          (s1 (window-start w1))
+          (s2 (window-start w2))
+          )
+     (set-window-buffer w1  b2)
+     (set-window-buffer w2 b1)
+     (set-window-start w1 s2)
+     (set-window-start w2 s1)
+     (setq i (1+ i)))))))
+
+(global-set-key (kbd "C-c m") 'rotate-windows)
+#+end_src
+
+** Windmove
+Windmove lets you move cursor between windows with
+Shift+arrows. Unfortunately this conflicts with some org-mode
+bindings. The following will enable windmove and fix the
+conflict. (source: [[http://orgmode.org/manual/Conflicts.html][orgmode manual]])
+#+begin_src emacs-lisp
+(windmove-default-keybindings 'meta)
+;(setq windmove-wrap-around t)
+;; Make windmove work in org-mode:
+          (add-hook 'org-shiftup-final-hook 'windmove-up)
+          (add-hook 'org-shiftleft-final-hook 'windmove-left)
+          (add-hook 'org-shiftdown-final-hook 'windmove-down)
+          (add-hook 'org-shiftright-final-hook 'windmove-right)
+#+end_src
+
+* Misc
+Enable GPG. This what worked eventually (see links [[http://stackoverflow.com/questions/15990483/emacs-in-windows-gpg-error][here]] and [[http://stackoverflow.com/questions/16676750/windows-emacs-git-bash-and-shell-command][here]]):
+#+begin_src emacs-lisp
+(setq explicit-shell-file-name
+      "C:/Program Files (x86)/Git/bin/bash.exe")
+(setq shell-file-name explicit-shell-file-name)
+(add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
+(add-to-list 'exec-path "C:\Program Files (x86)\GNU\GnuPG")
+#+end_src
+
+Base dir
+#+begin_src emacs-lisp
+(cd "~/")
+#+end_src
+
+Copy without selection [[http://www.emacswiki.org/emacs/CopyWithoutSelection]]
+#+begin_src emacs-lisp
+(defun get-point (symbol &optional arg)
+  "get the point"
+  (funcall symbol arg)
+  (point)
+)
+
+(defun copy-thing (begin-of-thing end-of-thing &optional arg)
+  "copy thing between beg & end into kill ring"
+  (save-excursion
+    (let ((beg (get-point begin-of-thing 1))
+          (end (get-point end-of-thing arg)))
+         (copy-region-as-kill beg end)))
+)
+     
+(defun paste-to-mark(&optional arg)
+  "Paste things to mark, or to the prompt in shell-mode"
+  (let ((pasteMe 
+    (lambda()
+      (if (string= "shell-mode" major-mode)
+        (progn (comint-next-prompt 25535) (yank))
+      (progn (goto-char (mark)) (yank) )))))
+      (if arg
+        (if (= arg 1)
+     	  nil
+        (funcall pasteMe))
+      (funcall pasteMe))
+))
+
+(defun copy-word (&optional arg)
+  "Copy words at point into kill-ring"
+  (interactive "P")
+    (copy-thing 'backward-word 'forward-word arg)
+    ;;(paste-to-mark arg)
+)
+
+(global-set-key (kbd "C-c w")         (quote copy-word))
+
+
+#+end_src
+
+
+Whitespace style (enable with M-x whitespace-mode)
+#+begin_src emacs-lisp
+(setq whitespace-style (quote (spaces tabs newline space-mark tab-mark newline-mark)))
+#+end_src
+
+(require 'secrets)
+
