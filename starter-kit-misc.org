@@ -27,6 +27,15 @@ Downloaded themes may be saved to the =themes/= directory in the base
 of the starter kit which ignored by git.  Once downloaded and
 evaluated a theme is activated using the =load-theme= function.
 
+#+name: starter-kit-color-theme
+#+begin_src emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+(setq custom-safe-themes t)
+(load-theme 'nzenburn t)
+#+end_src
+
+
+
 ** Window systems
 #+srcname: starter-kit-window-view-stuff
 #+begin_src emacs-lisp 

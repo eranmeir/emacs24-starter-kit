@@ -1,0 +1,43 @@
+#+TITLE: Personal settings
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* Activating more of the starter kit
+#+begin_src emacs-lisp
+(starter-kit-load "misc-recommended")
+(starter-kit-load "org")
+(starter-kit-load "eshell")
+(starter-kit-load "js")
+#+end_src
+
+* Ideas from [[https://github.com/dimitri/emacs-kicker][emacs-kicker]]
+#+name: emacs-kicker-visual-settings
+#+begin_src emacs-lisp
+(line-number-mode 1)			; have line numbers and
+(column-number-mode 1)			; column numbers in the mode line
+
+;; choose your own fonts, in a system dependant way
+(if (string-match "apple-darwin" system-configuration)
+    (set-face-font 'default "Monaco-13")
+  (set-face-font 'default "Monospace-10"))
+
+(global-hl-line-mode)			; highlight current line
+(global-linum-mode 1)			; add line numbers on the left
+
+;; under mac, have Command as Meta and keep Option for localized input
+(when (string-match "apple-darwin" system-configuration)
+  (setq mac-allow-anti-aliasing t)
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'alt))
+#+end_src
+
+* Ideas from [[https://github.com/kjhealy/emacs-starter-kit][kjhealy's starter kit]]
+
+* Misc
+#+begin_src emacs-lisp
+(setq backup-directory-alist
+          `((".*" . ,temporary-file-directory)))
+    (setq auto-save-file-name-transforms
+          `((".*" ,temporary-file-directory t)))
+
+(set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
+#+end_src

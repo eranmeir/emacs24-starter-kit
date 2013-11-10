@@ -7,28 +7,28 @@ This is part of the [[file:starter-kit.org][Emacs Starter Kit]].
 Java-script Helpers
 
 #+begin_src emacs-lisp
-(font-lock-add-keywords
- 'espresso-mode `(("\\(function *\\)("
-                   (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                             "ƒ")
-                             nil)))))
+;(font-lock-add-keywords
+; 'js-mode `(("\\(function *\\)("
+;                   (0 (progn (compose-region (match-beginning 1) (match-end 1)
+;                                             "ƒ")
+;                             nil)))))
 #+end_src
 
 #+begin_src emacs-lisp
-(font-lock-add-keywords 'espresso-mode
-                        '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
-                           1 font-lock-warning-face t)))
+;(font-lock-add-keywords 'js-mode
+;                        '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+;                           1 font-lock-warning-face t)))
 #+end_src
 
 #+begin_src emacs-lisp
-(autoload 'espresso-mode "espresso" "Start espresso-mode" t)
-(add-to-list 'auto-mode-alist '("\\.js$" . espresso-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . espresso-mode))
-(add-hook 'espresso-mode-hook 'moz-minor-mode)
-(add-hook 'espresso-mode-hook 'turn-on-paredit)
-(add-hook 'espresso-mode-hook 'run-starter-kit-coding-hook)
-;; (add-hook 'espresso-mode-hook 'idle-highlight)
-(setq espresso-indent-level 2)
+;(autoload 'js-mode "espresso" "Start js-mode" t)
+;(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+;(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+;(add-hook 'js-mode-hook 'moz-minor-mode)
+;(add-hook 'js-mode-hook 'turn-on-paredit)
+;(add-hook 'js-mode-hook 'run-starter-kit-coding-hook)
+;;; (add-hook 'js-mode-hook 'idle-highlight)
+;(setq js-indent-level 2)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -42,3 +42,82 @@ Java-script Helpers
     (insert (pp json-object))
     (goto-char (point-min))))
 #+end_src
+
+* JS setup from [[http://blog.deadpansincerity.com/2011/05/setting-up-emacs-as-a-javascript-editing-environment-for-fun-and-profit/][setting up emacs as javascript editing environment for fun and profit - deadpan sincerity]]
+** Auto completion
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elpa/auto-complete-1.4")
+; Load the default configuration
+(require 'auto-complete-config)
+; Make sure we can find the dictionaries
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/elpa/auto-complete-1.4/dict")
+; Use dictionaries by default
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+(global-auto-complete-mode t)
+; Start auto-completion after 2 characters of a word
+(setq ac-auto-start 2)
+; case sensitivity is important when finding matches
+(setq ac-ignore-case nil)
+#+end_src
+
+** Snipetting
+#+begin_src emacs-lisp
+;  (add-to-list 'load-path "~/.emacs.d/elpa/yasnippet-20131014.928")
+;  ;; Load the library
+;  (require 'yasnippet)
+;  (yas/initialize)
+;  ;; Load the snippet files themselves
+;  (yas/load-directory "~/.emacs.d/elpa/yasnippet-20131014.928/snippets/text-mode")
+;  ;; Let's have snippets in the auto-complete dropdown
+;  (add-to-list 'ac-sources 'ac-source-yasnippet)
+#+end_src
+** Syntax checking
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/lintnode")
+(require 'flymake-jslint)
+;; Make sure we can find the lintnode executable
+(setq lintnode-location "~/.emacs.d/lintnode")
+;; JSLint can be... opinionated
+(setq lintnode-jslint-excludes (list 'nomen 'undef 'plusplus 'onevar 'white))
+;; Start the server when we first open a js file and start checking
+(add-hook 'js-mode-hook
+          (lambda ()
+            (lintnode-hook)))
+#+end_src
+** Code folding
+#+begin_src emacs-lisp
+(add-hook 'js-mode-hook
+          (lambda ()
+            ;; Scan the file for nested code blocks
+            (imenu-add-menubar-index)
+            ;; Activate the folding mode
+            (hs-minor-mode t)))
+#+end_src
+
+** Javascript console
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/elpa/js-comint-0.0.1")
+(require 'js-comint)
+;; Use node as our repl
+(setq inferior-js-program-command "/usr/local/bin/node")
+ 
+;(setq inferior-js-mode-hook
+;      (lambda ()
+;        ;; We like nice colors
+;        (ansi-color-for-comint-mode-on)
+;        ;; Deal with some prompt nonsense
+;        (add-to-list 'comint-preoutput-filter-functions
+;                     (lambda (output)
+;                       (replace-regexp-in-string ".*1G\.\.\..*5G" "..."
+;                     (replace-regexp-in-string ".*1G.*3G" "&gt;" output))))))
+
+(setq inferior-js-mode-hook
+      (lambda ()
+        ;; We like nice colors
+        (ansi-color-for-comint-mode-on)))
+
+; fix from http://stackoverflow.com/questions/9390770/node-js-prompt-can-not-show-in-eshell
+(setenv "NODE_NO_READLINE" "1")
+
+#+end_src
+
