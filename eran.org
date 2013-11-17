@@ -7,6 +7,7 @@
 (starter-kit-load "org")
 (starter-kit-load "eshell")
 (starter-kit-load "js")
+(starter-kit-load "scala")
 #+end_src
 
 * Ideas from [[https://github.com/dimitri/emacs-kicker][emacs-kicker]]
@@ -39,5 +40,39 @@
     (setq auto-save-file-name-transforms
           `((".*" ,temporary-file-directory t)))
 
+;http://stackoverflow.com/questions/18856047/emacs-magit-commit-opens-new-emacs-client
 (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
+#+end_src
+
+Smoother scrolling (from [[http://www.emacswiki.org/emacs/SmoothScrolling][emacs wiki]]):
+#+begin_src emacs-lisp
+ ;; scroll one line at a time (less "jumpy" than defaults)
+    (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+    (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+    (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+    (setq scroll-step 1) ;; keyboard scroll one line at a time
+#+end_src
+
+
+http://www.emacswiki.org/emacs/WindowResize
+You can resize windows using the keyboard (eg. C-x ^ to make the
+current windows taller (and C-x } to make it wider ({ to make it
+shrink-horizontally)). The default keybindings might not be
+appropriate for you, however. Here is a very simple suggestion to make
+them more accessible.
+
+#+begin_src emacs-lisp
+    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+    (global-set-key (kbd "S-C-<down>") 'shrink-window)
+    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+#+end_src
+
+
+Fix PATH
+http://stackoverflow.com/questions/8606954/path-and-exec-path-set-but-emacs-does-not-find-executable
+https://github.com/purcell/exec-path-from-shell
+#+begin_src emacs-lisp
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 #+end_src
