@@ -35,13 +35,13 @@
 
 * Misc
 #+begin_src emacs-lisp
-(setq backup-directory-alist
-          `((".*" . ,temporary-file-directory)))
-    (setq auto-save-file-name-transforms
-          `((".*" ,temporary-file-directory t)))
-
-;http://stackoverflow.com/questions/18856047/emacs-magit-commit-opens-new-emacs-client
-(set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
+  (setq backup-directory-alist
+            `((".*" . ,temporary-file-directory)))
+      (setq auto-save-file-name-transforms
+            `((".*" ,temporary-file-directory t)))
+  
+  ;http://stackoverflow.com/questions/18856047/emacs-magit-commit-opens-new-emacs-client
+  (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
 #+end_src
 
 Smoother scrolling (from [[http://www.emacswiki.org/emacs/SmoothScrolling][emacs wiki]]):
@@ -62,10 +62,10 @@ appropriate for you, however. Here is a very simple suggestion to make
 them more accessible.
 
 #+begin_src emacs-lisp
-    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-    (global-set-key (kbd "S-C-<down>") 'shrink-window)
-    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+    (global-set-key (kbd "A-C-<left>") 'shrink-window-horizontally)
+    (global-set-key (kbd "A-C-<right>") 'enlarge-window-horizontally)
+    (global-set-key (kbd "A-C-<down>") 'shrink-window)
+    (global-set-key (kbd "A-C-<up>") 'enlarge-window)
 #+end_src
 
 
@@ -76,3 +76,12 @@ https://github.com/purcell/exec-path-from-shell
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 #+end_src
+
+
+[[https://github.com/pashinin/workgroups2][Workgroups]]
+#+begin_src emacs-lisp
+  (require 'workgroups2)
+  ;; Change some settings
+  (workgroups-mode 1)        ; put this one at the bottom of .emacs
+#+end_src
+
