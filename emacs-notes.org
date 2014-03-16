@@ -1,0 +1,61 @@
+
+* Org related shortcuts 
+To follow links: C-c C-o (org-open-at-point)
+To insert links use this format [[link][desc]
+* Navigation
+** Info mode
+h	Invoke the Info tutorial.
+q	Quit Info: reselect previously selected buffer.
+n	Move to the "next" node of this node.
+p	Move to the "previous" node of this node.
+^	Move "up" from this node.
+l	Move back in history to the last node you were at.
+r	Move forward in history to the node you returned from after using l.
+L	Go to menu of visited nodes.
+T	Go to table of contents of the current Info file.
+
+** Help mode
+TAB/S-TAB       navigate links
+C-c C-b         help-go-back
+C-c C-c         help-follow-symbol
+C-c C-f         help-go-forward
+** Buffers window
+RET view the buffer on this line
+o   as above but in another window
+q   quit buffer window
+m   mark the buffer at point
+u   unmark the buffer at point
+t   invert selection
+** Dired (C-x d)
+   - m -> mark file
+   - u -> unmark
+   - Enter -> Open file
+   - q -> close the dir
+   - C -> copy the file
+   - R -> Rename
+
+* Important help shortcuts
+C-h i - emacs manual
+C-h t - emacs tutorial
+C-h k <keyboard-shortcut> (describe-key) - help on keyboard-shortcut
+C-h f (describe-function) - describes commands/functions - those you can run with M-x
+C-h b (describe-bindings) - Show a list of all defined keys
+C-h m (describe-mode) - Shows major and minor modes and relevant keys in them (more contextual C-h b)
+C-h a (apropos) - Search for commands
+
+* Version control (git, etc.)
+  C-x v =    -> diff selected buffer
+** Magit
+   Magit is an emacs mode for interfacing with git
+   check out [[http://www.emacswiki.org/emacs/Magit][emacswiki entry]], [[http://magit.github.io/documentation.html][documentation]] and [[http://daemianmack.com/magit-cheatsheet.html][Magit cheatsheet]]
+   - M-x magit-status to see git status buffer, in which you can:
+     - s -> stage buffer
+     - TAB -> diff
+     - c -> commit staged changes
+     - ? -> show more shortcuts
+     - b -> switch branch
+     - P P -> git push
+     - F F -> git pull
+
+
+     

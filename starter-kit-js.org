@@ -96,3 +96,12 @@ Java-script Helpers
 
 #+end_src
 
+* Tern (http://ternjs.net/doc/manual.html#emacs)
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/tern/emacs")
+  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+  (eval-after-load 'tern
+    '(progn
+       (require 'tern-auto-complete)
+       (tern-ac-setup)))
+#+end_src
