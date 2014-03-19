@@ -22,6 +22,9 @@ elpa/*
 src/*
 themes/*
 url/*
+ensime/*
+lintnode/*
+
 
 ## exported and encrypted files
 *gpg
