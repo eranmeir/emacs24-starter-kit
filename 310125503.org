@@ -82,6 +82,17 @@ conflict. (source: [[http://orgmode.org/manual/Conflicts.html][orgmode manual]])
 #+end_src
 
 * Misc
+Keyboard setup - make PC keyboard's Win key or other to type Super or
+Hyper, for emacs running on Windows.
+#+begin_src emacs-lisp
+(setq w32-pass-lwindow-to-system nil
+      w32-pass-rwindow-to-system nil
+      w32-pass-apps-to-system nil
+      w32-lwindow-modifier 'super ; Left Windows key
+      w32-rwindow-modifier 'super ; Right Windows key
+      w32-apps-modifier 'hyper) ; Menu key
+#+end_src
+
 Enable GPG. This what worked eventually (see links [[http://stackoverflow.com/questions/15990483/emacs-in-windows-gpg-error][here]] and [[http://stackoverflow.com/questions/16676750/windows-emacs-git-bash-and-shell-command][here]]):
 #+begin_src emacs-lisp
 (setq explicit-shell-file-name
@@ -98,44 +109,51 @@ Base dir
 
 Copy without selection [[http://www.emacswiki.org/emacs/CopyWithoutSelection]]
 #+begin_src emacs-lisp
-(defun get-point (symbol &optional arg)
-  "get the point"
-  (funcall symbol arg)
-  (point)
-)
-
-(defun copy-thing (begin-of-thing end-of-thing &optional arg)
-  "copy thing between beg & end into kill ring"
-  (save-excursion
-    (let ((beg (get-point begin-of-thing 1))
-          (end (get-point end-of-thing arg)))
-         (copy-region-as-kill beg end)))
-)
-     
-(defun paste-to-mark(&optional arg)
-  "Paste things to mark, or to the prompt in shell-mode"
-  (let ((pasteMe 
-    (lambda()
-      (if (string= "shell-mode" major-mode)
-        (progn (comint-next-prompt 25535) (yank))
-      (progn (goto-char (mark)) (yank) )))))
+  (defun get-point (symbol &optional arg)
+    "get the point"
+    (funcall symbol arg)
+    (point)
+    )
+  
+  (defun copy-thing (begin-of-thing end-of-thing &optional arg)
+    "copy thing between beg & end into kill ring"
+    (save-excursion
+      (let ((beg (get-point begin-of-thing 1))
+            (end (get-point end-of-thing arg)))
+        (copy-region-as-kill beg end)))
+    )
+  
+  (defun paste-to-mark(&optional arg)
+    "Paste things to mark, or to the prompt in shell-mode"
+    (let ((pasteMe 
+           (lambda()
+             (if (string= "shell-mode" major-mode)
+                 (progn (comint-next-prompt 25535) (yank))
+               (progn (goto-char (mark)) (yank) )))))
       (if arg
-        (if (= arg 1)
-     	  nil
+          (if (= arg 1)
+              nil
+            (funcall pasteMe))
         (funcall pasteMe))
-      (funcall pasteMe))
-))
-
-(defun copy-word (&optional arg)
-  "Copy words at point into kill-ring"
-  (interactive "P")
+      ))
+  
+  (defun copy-word (&optional arg)
+    "Copy words at point into kill-ring"
+    (interactive "P")
     (copy-thing 'backward-word 'forward-word arg)
     ;;(paste-to-mark arg)
-)
-
-(global-set-key (kbd "C-c w")         (quote copy-word))
-
-
+    )
+  
+  
+  (defun copy-line (&optional arg)
+    "Save current line into Kill-Ring without mark the line "
+    (interactive "P")
+    (copy-thing 'beginning-of-line 'end-of-line arg)
+    (paste-to-mark arg)
+    )
+  
+  (global-set-key (kbd "C-c w")         (quote copy-word))
+  (global-set-key (kbd "C-c l")         (quote copy-line))
 #+end_src
 
 
@@ -145,4 +163,6 @@ Whitespace style (enable with M-x whitespace-mode)
 #+end_src
 
 (require 'secrets)
+
+
 
