@@ -53,13 +53,13 @@ vanilla zenburn
 
 * Misc
 #+begin_src emacs-lisp
-;  (setq backup-directory-alist
-;            `((".*" . ,temporary-file-directory)))
-;      (setq auto-save-file-name-transforms
-;            `((".*" ,temporary-file-directory t)))
-;  
-;  ;http://stackoverflow.com/questions/18856047/emacs-magit-commit-opens-new-emacs-client
-;  (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
+  (setq backup-directory-alist
+            `((".*" . ,temporary-file-directory)))
+      (setq auto-save-file-name-transforms
+            `((".*" ,temporary-file-directory t)))
+  
+  ;http://stackoverflow.com/questions/18856047/emacs-magit-commit-opens-new-emacs-client
+  (set-variable 'magit-emacsclient-executable "/usr/local/Cellar/emacs/HEAD/bin/emacsclient")
 #+end_src
 
 Smoother scrolling (from [[http://www.emacswiki.org/emacs/SmoothScrolling][emacs wiki]]):

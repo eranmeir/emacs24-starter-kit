@@ -32,7 +32,9 @@ install them. Other dependencies are provided by Emacs 24.
 You really don't need this; trust me.
 #+name: starter-kit-no-menu
 #+begin_src emacs-lisp 
-(menu-bar-mode -1)
+(unless (string-match "apple-darwin" system-configuration)
+  ;; on mac, there's always a menu bar drown, don't have it empty
+  (menu-bar-mode -1))
 #+end_src
 
 ** Nxhtml -- utilities for web development
